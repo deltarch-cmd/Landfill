@@ -1,76 +1,146 @@
 {
-    // Bar dimensions
-    "layer": "top",
-    "position": "top",
-    "height": 24,
-    /* "width": 1920, Lets leave it in auto '-' */
+    "layer": "top", // Waybar at top layer
+    "position": "top", // Waybar position (top|bottom|left|right)
+    "height": 30, // Waybar height (to be removed for auto height)
+    "spacing": 6, // Gaps between modules (4px)
 
-    // Modules positions config 
-    "margin": 0,
-    "spacing": 5, // Spacing between modules
-    "fixed-center": true, // True, pls
-
-    // Modules positions
     "modules-left": [
         "hyprland/workspaces",
-        "custom/separator",
+        "hyprland/scratchpad"
+    ],
+
+    "modules-center": [
         "hyprland/window"
     ],
-    "modules-center": ["clock"],
+
     "modules-right": [
+        "pulseaudio",
         "network",
-        "custom/separator",
-        "backlight",
-        "custom/separator",
-        "pulseaudio", // Saca tanto volumen como micro
-        "custom/separator",
         "battery",
-        "custom/separator",
+        "clock",
         "tray"
     ],
 
-    // Modules specs
-    "hyprland/workspaces": {
+    "hyprland/workspaces" : {
         "format": "{icon}",
-        "format-active": "{icon}",
-        "format-icons": {
-            "1": "一",
-            "2": "二",
-            "3": "三",
-            "4": "四",
-            "5": "五",
-            "6": "六",
-            "7": "七",
-            "8": "八",
-            "9": "九",
-            "10": "十"
-        },
         "on-click": "activate",
-        "all-outputs": true
+        "all-outputs": false,
+
+        "sort-by-number": true,
+
+        "format-icons": {
+          "1" : "一",
+          "2" : "二",
+          "3" : "三",
+          "4" : "四",
+          "5" : "五",
+          "6" : "六",
+          "7" : "七",
+          "8" : "八",
+          "9" : "九"
+        }
     },
 
     "hyprland/window": {
+        "icon": true,
+        "icon-size": 18,
         "format": "{}",
-        "separate-outputs": true
+        "separate-outputs": true 
     },
 
-    "battery": {
-        "format": "{icon} {capacity}%",
-        "format-icons": ["", "", "", "", ""]
-        // "full-at": 80
+    "hyprland/scratchpad": {
+        "format": "{icon} {count}",
+        "show-empty": false,
+        "format-icons": ["", ""],
+        "tooltip": true,
+        "tooltip-format": "{app}: {title}"
+    },
+
+    "tray": {
+        "icon-size": 18,
+        "spacing": 6,
+
+        "icons": {
+          "blueman": "bluetooth"
+          // "TelegramDesktop": "$HOME/.local/share/icons/hicolor/16x16/apps/telegram.png"
+        }
     },
 
     "clock": {
-        "format": "  {:%A %d/%m ~ %H:%M}"
+        // "timezone": "America/New_York",
+        "format": "{:%A, %d/%m ~ %H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+    "cpu": {
+        "format": "{usage}% ",
+        "tooltip": false
+    },
+
+    "memory": {
+        "format": "{}% "
+    },
+
+    "temperature": {
+        // "thermal-zone": 2,
+        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+        // "format-critical": "{temperatureC}°C {icon}",
+        "critical-threshold": 80,
+        "format": "{temperatureC}°C {icon}",
+        "format-icons": ["", "", ""]
+    },
+
+    "backlight": {
+        // "device": "acpi_video1",
+        "format": "{percent}% {icon}",
+        "format-icons": ["", "", "", "", "", "", "", "", ""]
+    },
+
+    "battery": {
+        "states": {
+            // "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        "format-full": "{capacity}% {icon}",
+        "format-charging": "{capacity}% ",
+        "format-plugged": "{capacity}% ",
+        "format-alt": "{time} {icon}",
+        // "format-good": "", // An empty format will hide the module
+        // "format-full": "",
+        "format-icons": ["", "", "", "", ""]
+    },
+
+    "power-profiles-daemon": {
+        "format": "{icon}",
+        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+        "tooltip": true,
+        "format-icons": {
+            "default": "",
+            "performance": "",
+            "balanced": "",
+            "power-saver": ""
+        }
+    },
+
+    "network": {
+        // "interface": "wlp2*", // (Optional) To force the use of this interface
+        "format-wifi": "  {essid} ({signalStrength}%)",
+        "format-ethernet": "󰈀 Ethernet",
+        "format-linked": "  {ifname} (No IP) ",
+        "format-disconnected": " Disconnected",
+
+        "tooltip-format": "{ifname} via {gwaddr} "
     },
 
     "pulseaudio": {
-        "scroll-step": 1, // %, can be a float
-        "format": "{icon} {volume}% {format_source}",
+        // "scroll-step": 1, // %, can be a float
+        "format": "{volume}% {icon} {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-bluetooth-muted": "{icon}  {format_source} ",
+        "format-bluetooth-muted": " {icon} {format_source}",
         "format-muted": " {format_source}",
-        "format-source": " {volume}%",
+        "format-source": "{volume}% ",
         "format-source-muted": "",
         "format-icons": {
             "headphone": "",
@@ -82,34 +152,5 @@
             "default": ["", "", ""]
         },
         "on-click": "pavucontrol"
-    },
-
-    "backlight": {
-        "device": "amdgpu_bl0",
-        "format": "{icon} {percent}%",
-        "format-icons": ["", ""]
-    },
-
-    "network": {
-        /* "interface": "enp5s0f3u2", */
-        "format": "{ifname}",
-        "format-wifi": " Wifi ({signalStrength}%)",
-        "format-ethernet": " Ethernet",
-        "format-disconnected": " No wifi?", //An empty format will hide the module.
-        "tooltip-format": " {ifname} via {gwaddr}",
-        "tooltip-format-wifi": " {essid} ({signalStrength}%)",
-        "tooltip-format-ethernet": " {ifname}",
-        "tooltip-format-disconnected": "Disconnected",
-        "max-length": 50,
-        "on-click": "kitty -e nmtui"
-    },
-
-    "custom/separator": {
-        "format": "|" 
-    }, 
-
-    "tray": {
-        "icon-size": 20,
-        "spacing": 10
     }
 }
